@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8">
+            
+        <meta http-equiv = "X-UA-Compatible" content = "IE=edge">
+            
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+                        
+        <link rel = "stylesheet" type = "text/css" href = "{% static 'css/core.css' %}">
+                    
+        <link href = "https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel = "stylesheet">           
+        
+        <title>Edit | Colleague</title>
+    </head>
+
+    <body>
+        <div class = "edit-box">
+            <div class = "edit">
+
+                <div class = "edit-content">
+                    <form method = "POST" action = "" enctype = "multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class = "field first input-field">
+                            <label for = "first-name">First Name</label>
+
+                            <input type = "text" placeholder = "First Name" class = "input" id = "first-name" name = "first_name" required>
+
+                            <i class = "bx bx-id-card field-icon"></i>
+                        </div>
+
+                        <div class = "field input-field">
+                            <label for = "last-name">Last Name</label>
+
+                            <input type = "text" placeholder = "Last Name" class = "input" id = "last-name" name = "last_name" required>
+
+                            <i class = "bx bx-id-card field-icon"></i>
+                        </div>
+
+                        <div class = "field input-field">
+                            <label for = "age">Age</label>
+
+                            <input type = "age" placeholder = "Age" class = "input" id = "age" name = "age" required>
+
+                            <i class = "bx bx-user field-icon"></i>
+                        </div>
+
+                        <div class = "field input-field">
+                            <label for = "email">Email</label>
+
+                            <input type = "email" placeholder = "Email" class = "input" id = "email" name = "email" required>
+
+                            <i class = "bx bx-envelope field-icon"></i>
+                        </div>
+
+                        <div class = "field input-field">
+                            <label for = "phone-number">Phone Number</label>
+
+                            <input type = "text" placeholder = "Phone Number" class = "input" id = "phone-number" name = "phone_number" required>
+
+                            <i class = "bx bx-phone field-icon"></i>
+                        </div>
+
+                        <div class = "field input-field">
+                            <label for = "address">Address</label>
+
+                            <input type = "text" placeholder = "Address" class = "input" id = "address" name = "address" required>
+
+                            <i class = "bx bx-home field-icon"></i>
+                        </div>
+
+                        <div class = "field checkbox-field">
+                            <label for = "is-male">Male</label>
+
+                            <input type = "text" placeholder = "Male" class = "text" readonly = "readonly">
+                            
+                            <input type = "checkbox" class = "checkbox" id = "is-male" name = "is_male" onclick = "document.getElementById('is-female').checked = false; document.getElementById('is-female').required = false; document.getElementById('is-other').checked = false; document.getElementById('is-other').required = false" required>	
+                        </div>
+
+                        <div class = "field checkbox-field">
+                            <label for = "is-female">Female</label>
+
+                            <input type = "text" placeholder = "Female" class = "text" readonly = "readonly">
+                            
+                            <input type = "checkbox" class = "checkbox" id = "is-female" name = "is_female" onclick = "document.getElementById('is-male').checked = false; document.getElementById('is-male').required = false; document.getElementById('is-other').checked = false; document.getElementById('is-other').required = false" required>	
+                        </div>
+
+                        <div class = "field checkbox-field">
+                            <label for = "is-other">Other</label>
+
+                            <input type = "text" placeholder = "Other" class = "text" readonly = "readonly">
+                            
+                            <input type = "checkbox" class = "checkbox" id = "is-other" name = "is_other" onclick = "document.getElementById('is-male').checked = false; document.getElementById('is-male').required = false; document.getElementById('is-female').checked = false; document.getElementById('is-female').required = false;" required>	
+                        </div>
+
+                        <div class = "field input-field">
+                            <label for = "profile-name">Profile Photo</label>
+
+                            <input placeholder = "Profile Photo" class = "text" readonly = "readonly" id = "profile-name">
+
+                            <label class = "image" for = "profile-upload"><i class = "bx bxs-camera-plus field-icon"></i></label>
+                            
+                            <input type = "file" class = "image" id = "profile-upload" accept = "image" name = "profile_photo" onchange = "displayName(this)" hidden>
+
+                        </div>
+
+                        <div class = "field button-field">
+                            <button type = "submit">Edit</button>
+                        </div>
+                    </form>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <script src = "https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                            {% if message.tags == "info" %}<script>Swal.fire({title: "Hey!", text: "{{message}}", icon: "warning", iconColor: "#3B5998", allowOutsideClick: false, allowEscapeKey: false, confirmButtonColor: "#3B5998"})</script>
+                            {% elif message.tags == "success" %}<script>Swal.fire({title: "Yay!", text: "{{message}}", icon: "success", iconColor: "#2ECC71", allowOutsideClick: false, allowEscapeKey: false, confirmButtonColor: "#2ECC71"})</script>
+                            {% else %}<script>Swal.fire({title: "Oops!", text: "{{message}}", icon: "error", iconColor: "#E74C3C", allowOutsideClick: false, allowEscapeKey: false, confirmButtonColor: "#E74C3C"})</script>
+                            {% endif %}    
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var checkboxes = $("input[type='checkbox']"),
+            submit = $("button[type='submit']");
+
+        checkboxes.click(function(){
+            submit.attr("required", !checkboxes.is(":checked"));
+        });
+    </script>
+
+    <script>
+        function displayName(input){
+            const profileName = input.files[0] ? input.files[0].name : "";
+            const profileNameInput = document.getElementById("profile-name");
+            const placeholder = profileNameInput.getAttribute("data-placeholder");
+        
+            if (profileName){
+                profileNameInput.value = profileName;
+                profileNameInput.style.color = ""
+
+            } else{
+                profileNameInput.value = placeholder;
+            }
+        }
+    
+        const fileNameInput = document.getElementById("profile-name");
+
+        fileNameInput.setAttribute("data-placeholder", profileNameInput.placeholder);
+  </script>
+</html>
